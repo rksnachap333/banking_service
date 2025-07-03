@@ -22,6 +22,15 @@ jobs:
       - name: Grant execute permission to gradlew
         run: chmod +x ./gradlew
 
+      - name: Show files in root
+        run: ls -lah
+
+      - name: Check gradlew permission
+        run: ls -l gradlew
+
+      - name: Show Gradle wrapper directory
+        run: ls -lah gradle/wrapper
+
       - name: Build with Gradle (bootJar)
         run: ./gradlew bootJar --stacktrace --info
 

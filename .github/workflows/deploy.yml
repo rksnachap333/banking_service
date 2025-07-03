@@ -25,6 +25,9 @@ jobs:
       - name: Build with Gradle (bootJar)
         run: ./gradlew bootJar
 
+      - name: List build/libs output
+        run: ls -lh build/libs
+
       - name: Show contents of build/libs
         run: ls -lh build/libs
 

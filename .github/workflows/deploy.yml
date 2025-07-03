@@ -18,7 +18,8 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'  # or 11, depending on your Spring Boot version
-
+      - name: Grant execute permission to gradlew
+        run: chmod +x ./gradlew
       - name: Build with Gradle
         run: ./gradlew clean build -x test
 

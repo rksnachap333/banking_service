@@ -17,11 +17,16 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'  # or 11, depending on your Spring Boot version
+          java-version: '17'
+
       - name: Grant execute permission to gradlew
         run: chmod +x ./gradlew
-      - name: Build with Gradle
-        run: ./gradlew clean build -x test
+
+      - name: Build with Gradle (bootJar)
+        run: ./gradlew bootJar
+
+      - name: Show contents of build/libs
+        run: ls -lh build/libs
 
       - name: Upload JAR to Ubuntu VM
         uses: appleboy/scp-action@v0.1.4

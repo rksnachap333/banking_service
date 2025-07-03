@@ -1,5 +1,50 @@
-# Ignore Gradle project-specific cache directory
-.gradle
+### Gradle ###
+.gradle/
+build/
 
-# Ignore Gradle build output directory
-build
+# Keep gradle wrapper scripts and JARs (needed for CI)
+!gradlew
+!gradlew.bat
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+
+# Local Gradle config (can vary by dev)
+gradle-app.setting
+gradle.properties
+
+### Java ###
+*.class
+*.jar
+*.war
+*.ear
+
+### Logs ###
+*.log
+
+### IDEs ###
+# IntelliJ
+.idea/
+*.iml
+# Eclipse
+.project
+.classpath
+.settings/
+# VS Code
+.vscode/
+
+### OS/Editor files ###
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+### Temp / Misc ###
+*.tmp
+*.bak
+*.orig
+*.rej
+
+# Optional: If you use Docker or environment files
+docker-compose.override.yml
+*.env
+.env.*

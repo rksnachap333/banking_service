@@ -23,7 +23,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle (bootJar)
-        run: ./gradlew bootJar
+        run: ./gradlew bootJar --stacktrace --info
 
       - name: List build/libs output
         run: ls -lh build/libs

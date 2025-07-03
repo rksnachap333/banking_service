@@ -2,18 +2,20 @@
 .gradle/
 build/
 
-# Keep gradle wrapper scripts and JARs (needed for CI)
+# Keep Gradle Wrapper for CI/CD
 !gradlew
 !gradlew.bat
 !gradle/wrapper/gradle-wrapper.jar
 !gradle/wrapper/gradle-wrapper.properties
 
-# Local Gradle config (can vary by dev)
+# Ignore local Gradle settings
 gradle-app.setting
 gradle.properties
 
 ### Java ###
 *.class
+
+# Ignore generated JARs, but allow CI to create and upload them
 *.jar
 *.war
 *.ear
@@ -21,7 +23,7 @@ gradle.properties
 ### Logs ###
 *.log
 
-### IDEs ###
+### IDEs & Editors ###
 # IntelliJ
 .idea/
 *.iml
@@ -32,19 +34,19 @@ gradle.properties
 # VS Code
 .vscode/
 
-### OS/Editor files ###
+### OS Files ###
 .DS_Store
 Thumbs.db
 *.swp
 *.swo
 
-### Temp / Misc ###
+### Misc / Temp ###
 *.tmp
 *.bak
 *.orig
 *.rej
 
-# Optional: If you use Docker or environment files
+### Optional: Docker & Env Files ###
 docker-compose.override.yml
-*.env
+.env
 .env.*

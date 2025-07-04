@@ -44,5 +44,5 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            pkill -f '.jar' || true
+            pgrep -f '.jar' | xargs --no-run-if-empty sudo kill -9 || true
             nohup java -jar /home/rajesh/app/*.jar > /home/rajesh/app/app.log 2>&1 &

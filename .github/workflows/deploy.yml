@@ -36,6 +36,7 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           source: "app/build/libs/*.jar"
           target: "/home/rajesh/app/"
+          strip_components: 3  # Removes "app/build/libs"
 
       - name: Restart Spring Boot App
         uses: appleboy/ssh-action@v0.1.10

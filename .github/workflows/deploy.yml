@@ -45,4 +45,4 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             pgrep -f '.jar' | xargs --no-run-if-empty sudo kill -9 || true
-            nohup java -jar /home/rajesh/app/app/*.jar > /home/rajesh/app/app.log 2>&1 &
+            nohup java -jar /home/rajesh/app/*.jar > /home/rajesh/app/app.log 2>&1 &

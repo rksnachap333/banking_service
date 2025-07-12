@@ -23,7 +23,7 @@ public class RefreshTokenService {
     public Token createRefreshToken(String username) {
         Optional<User> userExtracted = userRepository.findByUsername(username);
         if (userExtracted.isPresent()) {
-            Optional<Token> token = tokenRepository.findByUserUserId(userExtracted.get().getId());
+            Optional<Token> token = tokenRepository.findTokenByUserId(userExtracted.get().getId());
             if(token.isPresent()){
                 //updating the new token to existing row
                 Token tokenToReplace = token.get();

@@ -2,6 +2,8 @@ package org.example.controllers;
 
 import lombok.AllArgsConstructor;
 import org.example.entities.Token;
+import org.example.entities.User;
+import org.example.repository.UserRepository;
 import org.example.request.AuthRequestDTO;
 import org.example.request.RefreshTokenDTO;
 import org.example.response.JwtResponseDTO;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @AllArgsConstructor
 @RestController
 @RequestMapping("/auth/v1/")
@@ -32,23 +36,32 @@ public class TokenController
     @Autowired
     private JwtService jwtService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @PostMapping("login")
     public ResponseEntity authenticationAndGetToken(@RequestBody AuthRequestDTO authRequestDTO) {
         try{
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.getUsername(),authRequestDTO.getPassword()));
-            if(authentication.isAuthenticated()) {
-                Token refreshToken = refreshTokenService.createRefreshToken(authRequestDTO.getUsername());
-                return new ResponseEntity<>(JwtResponseDTO.builder()
-                        .accessToken(jwtService.GenerateToken(authRequestDTO.getUsername()))
-                        .token(refreshToken.getToken())
-                        .build(), HttpStatus.OK
-                );
+            Optional<User> user = userRepository.findByUsername(authRequestDTO.getUsername());
+            if(user.isPresent()) {
+                Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.getUsername(),authRequestDTO.getPassword()));
+                if(authentication.isAuthenticated()) {
+                    Token refreshToken = refreshTokenService.createRefreshToken(authRequestDTO.getUsername());
+                    return new ResponseEntity<>(JwtResponseDTO.builder()
+                            .accessToken(jwtService.GenerateToken(authRequestDTO.getUsername()))
+                            .token(refreshToken.getToken())
+                            .build(), HttpStatus.OK
+                    );
+                } else{
+                    return new ResponseEntity<>("Incorrect password", HttpStatus.UNAUTHORIZED);
+                }
             } else{
-                return new ResponseEntity<>("Exception in User Service", HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>("Userid not found !!", HttpStatus.NOT_FOUND);
             }
+
         } catch (Exception e) {
             e.printStackTrace(); // <-- log the real issue here
-            return new ResponseEntity<>("Error: " + e.getMessage(), HttpStatus.BAD_GATEWAY);
+            return new ResponseEntity<>("Error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }

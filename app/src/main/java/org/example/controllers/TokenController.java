@@ -44,6 +44,7 @@ public class TokenController
         try{
             Optional<User> user = userRepository.findByUsername(authRequestDTO.getUsername());
             if(user.isPresent()) {
+                System.out.println("User Found Now will check Password !!");
                 Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.getUsername(),authRequestDTO.getPassword()));
                 if(authentication.isAuthenticated()) {
                     Token refreshToken = refreshTokenService.createRefreshToken(authRequestDTO.getUsername());
@@ -53,13 +54,16 @@ public class TokenController
                             .build(), HttpStatus.OK
                     );
                 } else{
+                    System.out.println("User Found  But Password is wrong!!");
                     return new ResponseEntity<>("Incorrect password", HttpStatus.UNAUTHORIZED);
                 }
             } else{
+                System.out.println("User Not Found !!");
                 return new ResponseEntity<>("Userid not found !!", HttpStatus.NOT_FOUND);
             }
 
         } catch (Exception e) {
+            System.out.println("User Finding meat with exception !!");
             e.printStackTrace(); // <-- log the real issue here
             return new ResponseEntity<>("Error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

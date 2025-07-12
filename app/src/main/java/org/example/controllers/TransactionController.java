@@ -3,7 +3,7 @@ package org.example.controllers;
 
 import lombok.AllArgsConstructor;
 import org.example.entities.Transaction;
-import org.example.kafka.producer.KafkaProducerService;
+//import org.example.kafka.producer.KafkaProducerService;
 import org.example.repository.AccountRepository;
 import org.example.repository.TransactionRepository;
 import org.example.request.TransactionDTO;
@@ -26,21 +26,21 @@ public class TransactionController
     @Autowired
     TransactionService transactionService;
 
-    @Autowired
-    KafkaProducerService kafkaProducerService;
+//    @Autowired
+//    KafkaProducerService kafkaProducerService;
 
     @PostMapping("deposit")
     public ResponseEntity deposit(@RequestBody TransactionDTO transactionDTO)
     {
         try {
             Transaction transaction = transactionService.deposit(transactionDTO);
-            try {
-                kafkaProducerService.sendMessage("Deposit Done !!");
-            } catch (Exception kafkaEx) {
-                // ✅ Kafka error should not affect user response
-                System.err.println("Kafka send failed: " + kafkaEx.getMessage());
-                // You can log this with a proper logger like SLF4J as well
-            }
+//            try {
+//                kafkaProducerService.sendMessage("Deposit Done !!");
+//            } catch (Exception kafkaEx) {
+//                // ✅ Kafka error should not affect user response
+//                System.err.println("Kafka send failed: " + kafkaEx.getMessage());
+//                // You can log this with a proper logger like SLF4J as well
+//            }
             return new ResponseEntity<>(TransactionResponseDTO.builder()
                     .transactionId(transaction.getId())
                     .remarks("Transaction Success !!")

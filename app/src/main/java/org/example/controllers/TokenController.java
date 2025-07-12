@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,14 +40,18 @@ public class TokenController
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private final PasswordEncoder passwordEncoder;
+
     @PostMapping("login")
     public ResponseEntity authenticationAndGetToken(@RequestBody AuthRequestDTO authRequestDTO) {
         try{
             Optional<User> user = userRepository.findByUsername(authRequestDTO.getUsername());
             if(user.isPresent()) {
                 System.out.println("User Found Now will check Password !!");
-                Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.getUsername(),authRequestDTO.getPassword()));
-                if(authentication.isAuthenticated()) {
+                boolean isAuthenticated = passwordEncoder.matches(authRequestDTO.getPassword(),user.get().getPassword());
+//                Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.getUsername(),authRequestDTO.getPassword()));
+                if(isAuthenticated) {
                     Token refreshToken = refreshTokenService.createRefreshToken(authRequestDTO.getUsername());
                     return new ResponseEntity<>(JwtResponseDTO.builder()
                             .accessToken(jwtService.GenerateToken(authRequestDTO.getUsername()))

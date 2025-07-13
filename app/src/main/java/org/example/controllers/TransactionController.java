@@ -2,11 +2,15 @@ package org.example.controllers;
 
 
 import lombok.AllArgsConstructor;
+import org.example.entities.Account;
 import org.example.entities.Transaction;
 //import org.example.kafka.producer.KafkaProducerService;
+import org.example.entities.User;
 import org.example.repository.AccountRepository;
 import org.example.repository.TransactionRepository;
+import org.example.repository.UserRepository;
 import org.example.request.TransactionDTO;
+import org.example.response.AccountDetailResponseDTO;
 import org.example.response.TransactionHistoryDTO;
 import org.example.response.TransactionResponseDTO;
 import org.example.services.TransactionService;
@@ -15,7 +19,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
@@ -25,6 +31,9 @@ public class TransactionController
 
     @Autowired
     TransactionService transactionService;
+
+    @Autowired
+    UserRepository userRepository;
 
 //    @Autowired
 //    KafkaProducerService kafkaProducerService;
@@ -100,7 +109,37 @@ public class TransactionController
 
         } catch (Exception ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-
         }
     }
+
+    @GetMapping("transactions")
+    public ResponseEntity getTransactionHistory(@RequestParam("username") String username, @RequestParam("to") Instant to, @RequestParam("from") Instant from)
+    {
+        try {
+            List<Transaction> transactions = transactionService.getTransactionSummary(username, from, to);
+            return new ResponseEntity<>(TransactionHistoryDTO.builder()
+                    .transactions(transactions)
+                    .build(), HttpStatus.OK
+            );
+
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("transaction_summary")
+    public ResponseEntity<? extends Object> getTransactionSummary(@RequestParam("username") String username, @RequestParam("limit") int limit ){
+        System.out.println("TransactionSummary : Inside getTransactionSummary");
+        try {
+            List<Transaction> transactions = transactionService.getTransactionSummary(username,limit);
+            return new ResponseEntity<>(TransactionHistoryDTO.builder()
+                    .transactions(transactions)
+                    .build(), HttpStatus.OK
+            );
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
 }

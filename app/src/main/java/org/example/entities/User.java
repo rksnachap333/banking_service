@@ -27,9 +27,8 @@ public class User {
 
     private Instant userCreatedOn;
 
-    @OneToOne
-    @JsonIgnore // Prevent infinite loop
-    @JoinColumn(name = "user")
+    @OneToOne(mappedBy = "user")
+    @JsonIgnore
     private Account account;
 
     @OneToOne(mappedBy = "user")

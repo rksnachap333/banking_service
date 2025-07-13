@@ -6,8 +6,11 @@ import org.example.enums.AccountType;
 import org.example.repository.AccountRepository;
 import org.example.repository.UserRepository;
 import org.example.request.UserDTO;
+import org.example.response.AccountDetailResponseDTO;
 import org.example.utils.AccountHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -41,23 +44,28 @@ public class AccountService {
         return accountRepository.findById(id);
     }
 
-    public Account deposit(Long id, double amount) {
-        Account account = getAccount(id).orElseThrow(() -> new RuntimeException("Account Not Found !!"));
-        account.setBalance(account.getBalance()+amount);
-        return accountRepository.save(account);
-    }
-
-    public Account withdraw(Long id, double amount) {
-        Account account = getAccount(id).orElseThrow(() -> new RuntimeException("Account Not Found !!"));
-        if(account.getBalance() < amount){
-            throw new RuntimeException("Insufficient Funds !!");
-        }
-        account.setBalance(account.getBalance() - amount);
-        return accountRepository.save(account);
-    }
-
     public Boolean isAccountExists(String accountNumber) {
         Optional<Account> account = accountRepository.findByAccountNumber(accountNumber);
         return account.isPresent();
+    }
+
+    public AccountDetailResponseDTO getAccountDetail(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        if(user.isPresent()) {
+            System.out.println("AccountDetail: Inside user present");
+            Optional<Account>account= accountRepository.findByUserId(user.get().getId());
+            Account accountDetail = account.get();
+            AccountDetailResponseDTO accountDetailResponseDTO = AccountDetailResponseDTO.builder()
+                    .accountHolderName(accountDetail.getAccountHolderName())
+                    .accountNumber(accountDetail.getAccountNumber())
+                    .address("Lig-23, Sarita Vihar , New Delhi- 110076")
+                    .userCreatedOn(user.get().getUserCreatedOn())
+                    .balance(accountDetail.getBalance())
+                    .build();
+            return accountDetailResponseDTO;
+        } else {
+            System.out.println("AccountDetail: User not found ==");
+            return null;
+        }
     }
 }

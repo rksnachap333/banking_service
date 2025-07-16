@@ -9,6 +9,9 @@ import lombok.Data;
 import org.example.services.JwtService;
 import org.example.services.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -59,7 +62,7 @@ public class JwtAuthFilter extends OncePerRequestFilter
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 System.out.println("Auth set in SecurityContextHolder");
             } else{
-                System.out.println("Token Expired");
+                new ResponseEntity<>("Token Expired", HttpStatus.UNAUTHORIZED);
             }
         } else {
             System.out.println("I am not doing anything");
